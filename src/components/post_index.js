@@ -1,23 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 
-import {fetchPosts} from '../actions/index';
+import { fetchPosts } from '../actions/index';
 
 
 class PostIndex extends Component {
-  fetchPosts();
-  
+  // componentDidMount is called right after a component is registered on the DOM and before a component is rendered
+  componentDidMount() {
+    this.props.fetchPosts(); // kicks of data loading process
+  }
+
+  renderPosts() {
+    return _.map(this.props.posts, (post) => {
+      return (
+        <li className="list-group-item" key={post.id}>
+          {post.title}
+        </li>
+      );
+    })
+  }
+
   render() {
     return (
-      <div>I've made a post index</div>
+      <div>
+        <h3>Posts</h3>
+        <ul className="list-group">
+          {this.renderPosts()}
+          {/* Calls the method renderPost and we create renderPost above */}
+        </ul>
+      </div>
     );
   }
 }
 
 function mapStateToProps(state) {
-  return state;
+  return { posts: state.posts };
 }
 
-export default connect(mapStateToProps)(PostIndex)
+export default connect(mapStateToProps, { fetchPosts: fetchPosts })(PostIndex)
+// sets this.props.fetchPosts = fetchPosts
+// we can use this syntax instead of mapDispatchToProps 
 
 // export default PostIndex;
