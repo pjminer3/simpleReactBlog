@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import {Field, reduxForm } from 'redux-form';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+
+import { createPost } from '../actions/';
 
 class NewPost extends Component {
   renderField(field) {
@@ -23,6 +27,7 @@ class NewPost extends Component {
   }
 
   onSubmit(values) {
+    this.props.createPost(values);
     console.log(values);
   }
   
@@ -77,8 +82,14 @@ function validate(values) {
 
 }
 
+// function mapDispatchToProps(dispatch) {
+//   return bindActionCreators( { createPost }, dispatch);
+// }
+
 // The below helps redux communicate directly between the component and the reducer set up in reducers > index.js
 export default reduxForm({
   validate,
   form: 'NewPostForm',
-})(NewPost);
+})(
+  connect(null, { createPost })(NewPost)
+);
